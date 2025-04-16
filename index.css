@@ -1,0 +1,38 @@
+h1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:white;
+}
+
+body{
+    background-color:darkslategray;
+}
+
+h2{
+    color:white;
+}
+
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color:white;
+    border: 2px solid white;
+    border-radius:8px;
+    margin: 10px;
+}
+
+.summary{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:black;
+}
+
+select{
+    margin: 10px;
+    padding: 5px;
+    border-radius: 5px;
+}
