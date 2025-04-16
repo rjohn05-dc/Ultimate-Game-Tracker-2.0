@@ -94,8 +94,31 @@ function addPlayer(){
         playerList.push(playerName);
         scores.push([0, 0, 0]); // Add a new score array for the new player
 
+
     }
     else{
         alert("Please enter a player name");
     }
 }
+
+function addGame(){
+    const gameList = document.getElementById("gameList").value;
+    const playerName=document.getElementById("playerName").value;
+    if(!playerName || !gameList){
+        alert("Please enter a player name and game name");
+        return;
+    }
+   
+    const g= nameMap.get(playerName);
+    if(g.has(gameList)){
+        alert("Player already has this game");
+    }
+    else{
+        g.push(gameList);
+        alert("Game added successfully");
+    }
+
+
+}
+
+document.getElementById("addGame").addEventListener("click", addGame());
