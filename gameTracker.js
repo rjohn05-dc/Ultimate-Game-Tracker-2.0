@@ -31,6 +31,7 @@ let nameMap= new Map([
 
 
 
+
 console.log(nameMap.get("Matt",storeGame("Matt",randomGame()))); // This will output the game list for Matt
 console.log(nameMap.get("Foggy",storeGame("Foggy",randomGame()))); // This will output the game list for Foggy
 console.log(nameMap.get("Heather",storeGame("Heather",randomGame()))); // This will output the game list for Heather
@@ -88,13 +89,13 @@ for(i=0; i<scores.length; i++){
 
 const playerList = ["Matt", "Foggy", "Heather"];
 function addPlayer(){
-    let newPlayer = prompt("Enter the name of the new player:");
-    if (playerList.includes(newPlayer)){
-        console.log("Player already exists");
+    const playerName = document.getElementById("playerName").value;
+    if(playerName){
+        playerList.push(playerName);
+        scores.push([0, 0, 0]); // Add a new score array for the new player
+
     }
-    else {
-        playerList.push(newPlayer);
-        console.log("Player added successfully");
+    else{
+        alert("Please enter a player name");
     }
-    
 }
