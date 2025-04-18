@@ -27,21 +27,35 @@
             <option value="game11">Poppy Playtime 4</option>
     </select>
 
+
     <button id="addGame" onclick="addGame()">Add Game to Player</button>
   <div class="contestants">
     <input type="text" id="playerName" placeholder="Player"></input>
 
-    <button class="addContestant" onclick="addPlayer()">Add player</button>
+    <button id="addContestant" onclick="addPlayer()">Add player</button>
   </div>
 
-    <div class="container">
+  <h2>Scores</h2>
+
+  <input type="text" id="scores" placeholder="Enter score"></input>
+  <button id="addScore" onclick="addScore()">Add Score</button>
+
+  <div class="buttons">
+    <button onclick="displaySummary()">Display Summary</button>
+    <button onclick="sortbyAverage()">Sort Players by Average</button>  
+  </div>
+ 
+
+  <div class="container">
+
         <h3>Results</h3>
 
     </div>
   
 
     
-    <button class="summary">Display Summary</button>
+  
+    
    
 
 

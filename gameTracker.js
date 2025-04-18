@@ -87,38 +87,70 @@ for(i=0; i<scores.length; i++){
 }
 
 
+
 const playerList = ["Matt", "Foggy", "Heather"];
-function addPlayer(){
-    const playerName = document.getElementById("playerName").value;
-    if(playerName){
-        playerList.push(playerName);
-        scores.push([0, 0, 0]); // Add a new score array for the new player
+  function addPlayer(){
+      const playerName = document.getElementById("playerName").value;
+      if(playerName){
+          playerList.push(playerName);
+        alert("Player added successfully");
+        //   scores.push([0, 0, 0]); // Add a new score array for the new player
+  
+  
+      }
+      else{
+          alert("Please enter a player name");
+      }
+  }
+  
+  function addGame(){
+      const gameList = document.getElementById("gameList").value;
+      const playerName=document.getElementById("playerName").value;
+      if(!playerName || !gameList){
+          alert("Please enter a player name and game name");
+          return;
+      }
+     
+      const g= nameMap.get(playerName);
+      if(nameMap.has(gameList)){
+          alert("Player already has this game");
+      }
+      else{
+          g.push(gameList);
+          alert("Game added successfully");
+      }
+  
+  
+  }
+
+  function addScore(){
+      const scoreInput = document.getElementById("scores").value;
+      const playerName = document.getElementById("playerName").value;
+      const gameList = document.getElementById("gameList").value;
+      const score = parseInt(scoreInput);
+      if(!playerName || !gameList || !scoreInput){
+          alert("Please enter a player name, game name and score");
+          return;
+      }
+      else{
+        if(!isNaN(score)){
+            const g= nameMap.get(playerName);
+            if(g){
+                g.push(score);
+                alert("Score added successfully");
+            }
+            else{
+                alert("Player not found");
+            }
+        }
+      }
+      }
+
+  
+
+  
 
 
-    }
-    else{
-        alert("Please enter a player name");
-    }
-}
-
-function addGame(){
-    const gameList = document.getElementById("gameList").value;
-    const playerName=document.getElementById("playerName").value;
-    if(!playerName || !gameList){
-        alert("Please enter a player name and game name");
-        return;
-    }
-   
-    const g= nameMap.get(playerName);
-    if(g.has(gameList)){
-        alert("Player already has this game");
-    }
-    else{
-        g.push(gameList);
-        alert("Game added successfully");
-    }
+  
 
 
-}
-
-document.getElementById("addGame").addEventListener("click", addGame());

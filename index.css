@@ -24,12 +24,11 @@ h2{
     margin: 10px;
 }
 
-.summary{
+.displaySummary{
     display: flex;
-    justify-content: center;
-    align-items: center;
     color:black;
 }
+
 
 select{
     margin: 10px;
