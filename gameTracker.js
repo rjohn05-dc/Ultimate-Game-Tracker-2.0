@@ -17,11 +17,7 @@ function randomGame(){
     let randomIndex = Math.floor(Math.random() * games.length);
     let game = games[randomIndex];
     return game;
-
-     
-   }
-
-
+}
 
 let nameMap= new Map([
     ["Matt", [randomGame(), randomGame(), randomGame()]], // Matt has 3 games
@@ -29,24 +25,21 @@ let nameMap= new Map([
     ["Heather", [randomGame(), randomGame(), randomGame()]] // Heather has 4 games
 ]);
 
-
-
-
 console.log(nameMap.get("Matt",storeGame("Matt",randomGame()))); // This will output the game list for Matt
 console.log(nameMap.get("Foggy",storeGame("Foggy",randomGame()))); // This will output the game list for Foggy
 console.log(nameMap.get("Heather",storeGame("Heather",randomGame()))); // This will output the game list for Heather
 
-
 // This function will store the game in the players game list if they don't have it already
- function storeGame(){
-    if (nameMap.has(randomGame())){
+function storeGame(playerName, game){
+    if (nameMap.get(playerName).includes(game)){
         console.log("Player already has this game");
     }
     else {
-        nameMap.set(randomGame(), randomGame());
+        nameMap.get(playerName).push(game);
         console.log("Game stored successfully");
     }
- }
+}
+
 let scores=[
     [300 , 600 , 900], //Matt
     [200 , 400 , 600], //Foggy
@@ -72,8 +65,6 @@ let results={
     }
 }
 
-
-
 console.log(results);
 
 // This will summarize each players score and average score
@@ -86,53 +77,50 @@ for(i=0; i<scores.length; i++){
     console.log("Player " + i + " has a total score of " + totalScore + " and an average score of " + averageScore);
 }
 
-
-
 const playerList = ["Matt", "Foggy", "Heather"];
-  function addPlayer(){
-      const playerName = document.getElementById("playerName").value;
-      if(playerName){
-          playerList.push(playerName);
+function addPlayer(){
+    const playerName = document.getElementById("playerName").value;
+    if(playerName){
+        playerList.push(playerName);
         alert("Player added successfully");
-        //   scores.push([0, 0, 0]); // Add a new score array for the new player
-  
-  
-      }
-      else{
-          alert("Please enter a player name");
-      }
-  }
-  
-  function addGame(){
-      const gameList = document.getElementById("gameList").value;
-      const playerName=document.getElementById("playerName").value;
-      if(!playerName || !gameList){
-          alert("Please enter a player name and game name");
-          return;
-      }
-     
-      const g= nameMap.get(playerName);
-      if(nameMap.has(gameList)){
-          alert("Player already has this game");
-      }
-      else{
-          g.push(gameList);
-          alert("Game added successfully");
-      }
-  
-  
-  }
+        
+        if(nameMap.has(playerName)){
+            alert("Player already exists");
+        }
+    }
+    else{
+        alert("Please enter a player name");
+    }
+}
 
-  function addScore(){
-      const scoreInput = document.getElementById("scores").value;
-      const playerName = document.getElementById("playerName").value;
-      const gameList = document.getElementById("gameList").value;
-      const score = parseInt(scoreInput);
-      if(!playerName || !gameList || !scoreInput){
-          alert("Please enter a player name, game name and score");
-          return;
-      }
-      else{
+function addGame(){
+    const gameList = document.getElementById("gameList").value;
+    const playerName=document.getElementById("playerName").value;
+    if(!playerName || !gameList){
+        alert("Please enter a player name and game name");
+        return;
+    }
+   
+    const g= nameMap.get(playerName);
+    if(g.includes(gameList)){
+        alert("Player already has this game");
+    }
+    else{
+        g.push(gameList);
+        alert("Game added successfully");
+    }
+}
+
+function addScore(){
+    const scoreInput = document.getElementById("scores").value;
+    const playerName = document.getElementById("playerName").value;
+    const gameList = document.getElementById("gameList").value;
+    const score = parseInt(scoreInput);
+    if(!playerName || !gameList || !scoreInput){
+        alert("Please enter a player name, game name and score");
+        return;
+    }
+    else{
         if(!isNaN(score)){
             const g= nameMap.get(playerName);
             if(g){
@@ -143,8 +131,24 @@ const playerList = ["Matt", "Foggy", "Heather"];
                 alert("Player not found");
             }
         }
-      }
-      }
+    }
+}
+
+
+function displaySummary() {
+    nameMap.forEach((games, player) => {
+        let totalScore = 0;
+        let gameCount = 0;
+        games.forEach(game => {
+            if (typeof game === "number") {
+                totalScore += game;
+                gameCount++;
+            }
+        });
+        const averageScore = totalScore / gameCount;
+        console.log(`Player: ${player}, Total Score: ${totalScore}, Average Score: ${averageScore}`);
+    });
+}
 
   
 
