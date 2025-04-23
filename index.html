@@ -4,53 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="index.css">
-    <script src="gameTracker.js"></script>
     <title>Game Tracker 2.0</title>
 </head>
 <body>
     <h1>Game Tracker 2.0</h1>
     
+    <section class="player-section">
+        <h2>Player Management</h2>
+        <div class="input-group">
+            <input type="text" id="playerName" placeholder="Enter player name">
+            <button id="addContestant" onclick="addPlayer()">Add Player</button>
+        </div>
+        
+        <div id="player-list-display">
+            <h3>Current Players</h3>
+            <ul id="displayPlayerList"></ul>
+        </div>
+    </section>
     
-   
-    <h2>Game List</h2>
-    <select id="gameList">
-            <option value="game1">GOW :RAGNAROK</option>
-            <option value="game2">Black Myth Wukong</option>
-            <option value="game3">Spider-Man 2</option>
-            <option value="game4">Resident Evil 4</option>
-            <option value="game5">Assassins Creed: Shadows</option>
-            <option value="game6">Sifu</option>
-            <option value="game7">Hogwarts Legacy</option>
-            <option value="game8">Star Wars Jedi: Survivor</option>
-            <option value="game9">Poppy Playtime</option>
-            <option value="game10">Street Fighter 6</option>
-            <option value="game11">Poppy Playtime 4</option>
-    </select>
+    <section class="game-section">
+        <h2>Game Management</h2>
+        <div class="input-group">
+            <select id="gameList">
+                <option value="GOW:RAGNAROK">GOW:RAGNAROK</option>
+                <option value="Black Myth Wukong">Black Myth Wukong</option>
+                <option value="Spider-Man 2">Spider-Man 2</option>
+                <option value="Resident Evil 4">Resident Evil 4</option>
+                <option value="Assassins Creed: Shadows">Assassins Creed: Shadows</option>
+                <option value="Sifu">Sifu</option>
+                <option value="Hogwarts Legacy">Hogwarts Legacy</option>
+                <option value="Star Wars Jedi: Survivor">Star Wars Jedi: Survivor</option>
+                <option value="Poppy Playtime">Poppy Playtime</option>
+                <option value="Street Fighter 6">Street Fighter 6</option>
+                <option value="Poppy Playtime 4">Poppy Playtime 4</option>
+            </select>
+            <button id="addGame" onclick="addGame()">Add Game to Player</button>
+        </div>
+    </section>
 
+    <section class="score-section">
+        <h2>Score Management</h2>
+        <div class="input-group">
+            <input type="number" id="scores" placeholder="Enter score">
+            <button id="addScore" onclick="addScore()">Add Score</button>
+        </div>
+    </section>
 
-    <button id="addGame" onclick="addGame()">Add Game to Player</button>
-  <div class="contestants">
-    <input type="text" id="playerName" placeholder="Player"></input>
+    <section class="summary-section">
+        <h2>Summary</h2>
+        <div class="buttons">
+            <button onclick="displaySummary()">Display Summary</button>
+            <button onclick="sortByAverage()">Sort by Average Score</button>
+        </div>
+        
+        <div class="container">
+            <h3>Results</h3>
+            <div id="summary-results"></div>
+        </div>
+    </section>
 
-    <button id="addContestant" onclick="addPlayer()">Add player</button>
-  </div>
-
-  <h2>Scores</h2>
-
-  <input type="text" id="scores" placeholder="Enter score"></input>
-  <button id="addScore" onclick="addScore()">Add Score</button>
-
-  <div class="buttons">
-    <button onclick="displaySummary()">Display Summary</button>
-    <button onclick="sortbyAverage()">Sort Players by Average</button>  
-  </div>
- 
-
-  <div class="container">
-    <h3>Results</h3>
-   
-  
-  </div>
-
+    <!-- Script tags at the end of body for better page loading -->
+    <script src="gameTracker.js"></script>
+    
+    <script>
+    // Initialize display of current players
+    function updatePlayerList() {
+        const listElement = document.getElementById("displayPlayerList");
+        if (listElement) {
+            listElement.innerHTML = "";
+            playerList.forEach(player => {
+                const li = document.createElement("li");
+                li.textContent = player;
+                listElement.appendChild(li);
+            });
+        }
+    }
+    
+    // Function to display results in the summary section
+    function displayResults() {
+        const resultsDiv = document.getElementById("summary-results");
+        if (resultsDiv) {
+            resultsDiv.innerHTML = "";
+            
+            nameMap.forEach((games, player) => {
+                const playerDiv = document.createElement("div");
+                playerDiv.className = "player-result";
+                
+                const playerHeading = document.createElement("h4");
+                playerHeading.textContent = player;
+                playerDiv.appendChild(playerHeading);
+                
+                const gamesList = document.createElement("p");
+                gamesList.innerHTML = `<strong>Games:</strong> ${games.join(", ")}`;
+                playerDiv.appendChild(gamesList);
+                
+                const scores = playerScores.get(player) || [];
+                if (scores.length > 0) {
+                    const totalScore = scores.reduce((sum, score) => sum + score, 0);
+                    const avgScore = totalScore / scores.length;
+                    
+                    const scoresList = document.createElement("p");
+                    scoresList.innerHTML = `<strong>Scores:</strong> ${scores.join(", ")}`;
+                    playerDiv.appendChild(scoresList);
+                    
+                    const scoreStats = document.createElement("p");
+                    scoreStats.innerHTML = `<strong>Total:</strong> ${totalScore} | <strong>Average:</strong> ${avgScore.toFixed(2)}`;
+                    playerDiv.appendChild(scoreStats);
+                } else {
+                    const noScores = document.createElement("p");
+                    noScores.textContent = "No scores recorded";
+                    playerDiv.appendChild(noScores);
+                }
+                
+                resultsDiv.appendChild(playerDiv);
+            });
+        }
+    }
+    
+    // Function to sort players by average score
+    function sortByAverage() {
+        const sortedPlayers = [...playerScores.entries()].sort((a, b) => {
+            const aScores = a[1];
+            const bScores = b[1];
+            
+            const aAvg = aScores.length > 0 ? 
+                aScores.reduce((sum, score) => sum + score, 0) / aScores.length : 0;
+            
+            const bAvg = bScores.length > 0 ? 
+                bScores.reduce((sum, score) => sum + score, 0) / bScores.length : 0;
+            
+            return bAvg - aAvg; // Sort from highest to lowest
+        });
+        
+        const resultsDiv = document.getElementById("summary-results");
+        if (resultsDiv) {
+            resultsDiv.innerHTML = "<h4>Players Sorted by Average Score</h4>";
+            
+            sortedPlayers.forEach(([player, scores]) => {
+                const playerDiv = document.createElement("div");
+                playerDiv.className = "player-result";
+                
+                const avg = scores.length > 0 ? 
+                    scores.reduce((sum, score) => sum + score, 0) / scores.length : 0;
+                
+                const playerInfo = document.createElement("p");
+                playerInfo.innerHTML = `<strong>${player}</strong>: Average Score ${avg.toFixed(2)}`;
+                playerDiv.appendChild(playerInfo);
+                
+                resultsDiv.appendChild(playerDiv);
+            });
+        }
+    }
+    
+    // Initialize display when page loads
+    window.addEventListener('DOMContentLoaded', function() {
+        updatePlayerList();
+    });
+    </script>
 </body>
 </html>

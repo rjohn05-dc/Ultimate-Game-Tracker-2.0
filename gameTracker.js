@@ -1,10 +1,9 @@
-
 const games = [
     "GOW:RAGNAROK",
     "Black Myth Wukong",
     "Spider-Man 2",
     "Resident Evil 4",
-    "Assasins Creed: Shadows",
+    "Assassins Creed: Shadows",
     "Sifu",
     "Hogwarts Legacy",
     "Star Wars Jedi: Survivor",
@@ -12,149 +11,166 @@ const games = [
     "Street Fighter 6",
     "Poppy Playtime 4"
 ];
-// This function will select a game from the games array and assign to one of the players
-function randomGame(){
+
+// This function will select a game from the games array
+function randomGame() {
     let randomIndex = Math.floor(Math.random() * games.length);
     let game = games[randomIndex];
     return game;
 }
 
-let nameMap= new Map([
+// Initialize the nameMap with players and their games
+let nameMap = new Map([
     ["Matt", [randomGame(), randomGame(), randomGame()]], // Matt has 3 games
     ["Foggy", [randomGame(), randomGame()]], // Foggy has 2 games
-    ["Heather", [randomGame(), randomGame(), randomGame()]] // Heather has 4 games
+    ["Heather", [randomGame(), randomGame(), randomGame()]] // Heather has 3 games
 ]);
 
-console.log(nameMap.get("Matt",storeGame("Matt",randomGame()))); // This will output the game list for Matt
-console.log(nameMap.get("Foggy",storeGame("Foggy",randomGame()))); // This will output the game list for Foggy
-console.log(nameMap.get("Heather",storeGame("Heather",randomGame()))); // This will output the game list for Heather
+// Player scores data structure - more organized approach
+let playerScores = new Map([
+    ["Matt", [300, 600, 900]],
+    ["Foggy", [200, 400, 600]],
+    ["Heather", [100, 200, 300]]
+]);
 
-// This function will store the game in the players game list if they don't have it already
-function storeGame(playerName, game){
-    if (nameMap.get(playerName).includes(game)){
-        console.log("Player already has this game");
+// Player list for easier reference
+const playerList = ["Matt", "Foggy", "Heather"];
+
+// This function will store the game in the player's game list if they don't have it already
+function storeGame(playerName, game) {
+    if (!nameMap.has(playerName)) {
+        console.log("Player not found");
+        return false;
     }
-    else {
+    
+    if (nameMap.get(playerName).includes(game)) {
+        console.log("Player already has this game");
+        return false;
+    } else {
         nameMap.get(playerName).push(game);
         console.log("Game stored successfully");
+        return true;
     }
 }
 
-let scores=[
-    [300 , 600 , 900], //Matt
-    [200 , 400 , 600], //Foggy
-    [100 , 200 , 300] , //Heather
-]
-// this function will select a random score from the scores array
-function score(){
-    let randomIndex = Math.floor(Math.random() * scores.length);
-    let score = scores[randomIndex];
-    return score;
-}
-
-// This will output the games in store for each player and their score
-let results={
-    Matt: {
-        game: nameMap.get("Matt"),
-    },
-    Foggy: {
-        game: nameMap.get("Foggy"),
-    },
-    Heather: {
-        game: nameMap.get("Heather"),
-    }
-}
-
-console.log(results);
-
-// This will summarize each players score and average score
-for(i=0; i<scores.length; i++){
-    let totalScore = 0;
-    for(j=0; j<scores[i].length; j++){
-        totalScore += scores[i][j];
-    }
-    let averageScore = totalScore / scores[i].length;
-    console.log("Player " + i + " has a total score of " + totalScore + " and an average score of " + averageScore);
-}
-
-const playerList = ["Matt", "Foggy", "Heather"];
-function addPlayer(){
+// Add a new player to the system
+function addPlayer() {
     const playerName = document.getElementById("playerName").value;
-    if(playerName){
-        playerList.push(playerName);
-        alert("Player added successfully");
-        
-        if(nameMap.has(playerName)){
-            alert("Player already exists");
-        }
-    }
-    else{
+    if (!playerName) {
         alert("Please enter a player name");
+        return;
     }
+    
+    // Check if player already exists
+    if (nameMap.has(playerName)) {
+        alert("Player already exists");
+        return;
+    }
+    
+    // Add player to playerList
+    playerList.push(playerName);
+    
+    // Initialize the player in nameMap with an empty array of games
+    nameMap.set(playerName, []);
+    
+    // Initialize player scores
+    playerScores.set(playerName, []);
+    
+    alert("Player added successfully");
+    console.log(`Added new player: ${playerName}`);
+    console.log("Updated player list:", playerList);
 }
 
-function addGame(){
-    const gameList = document.getElementById("gameList").value;
-    const playerName=document.getElementById("playerName").value;
-    if(!playerName || !gameList){
+// Add a game to a player's collection
+function addGame() {
+    const gameInput = document.getElementById("gameList").value;
+    const playerName = document.getElementById("playerName").value;
+    
+    if (!playerName || !gameInput) {
         alert("Please enter a player name and game name");
         return;
     }
-   
-    const g= nameMap.get(playerName);
-    if(g.includes(gameList)){
-        alert("Player already has this game");
-    }
-    else{
-        g.push(gameList);
-        alert("Game added successfully");
-    }
-}
-
-function addScore(){
-    const scoreInput = document.getElementById("scores").value;
-    const playerName = document.getElementById("playerName").value;
-    const gameList = document.getElementById("gameList").value;
-    const score = parseInt(scoreInput);
-    if(!playerName || !gameList || !scoreInput){
-        alert("Please enter a player name, game name and score");
+    
+    if (!nameMap.has(playerName)) {
+        alert("Player not found");
         return;
     }
-    else{
-        if(!isNaN(score)){
-            const g= nameMap.get(playerName);
-            if(g){
-                g.push(score);
-                alert("Score added successfully");
-            }
-            else{
-                alert("Player not found");
-            }
-        }
+    
+    const playerGames = nameMap.get(playerName);
+    if (playerGames.includes(gameInput)) {
+        alert("Player already has this game");
+    } else {
+        playerGames.push(gameInput);
+        alert("Game added successfully");
+        console.log(`Added game "${gameInput}" to player ${playerName}`);
     }
 }
 
+// Add a score for a player
+function addScore() {
+    const scoreInput = document.getElementById("scores").value;
+    const playerName = document.getElementById("playerName").value;
+    const score = parseInt(scoreInput);
+    
+    if (!playerName || !scoreInput) {
+        alert("Please enter a player name and score");
+        return;
+    }
+    
+    if (isNaN(score)) {
+        alert("Please enter a valid number for score");
+        return;
+    }
+    
+    if (!playerScores.has(playerName)) {
+        alert("Player not found");
+        return;
+    }
+    
+    // Add score to player's score array
+    playerScores.get(playerName).push(score);
+    alert("Score added successfully");
+    console.log(`Added score ${score} for player ${playerName}`);
+}
 
+// Display a summary of all players, their games, and scores
 function displaySummary() {
+    console.log("=== PLAYER SUMMARY ===");
+    
     nameMap.forEach((games, player) => {
-        let totalScore = 0;
-        let gameCount = 0;
-        games.forEach(game => {
-            if (typeof game === "number") {
-                totalScore += game;
-                gameCount++;
-            }
-        });
-        const averageScore = totalScore / gameCount;
-        console.log(`Player: ${player}, Total Score: ${totalScore}, Average Score: ${averageScore}`);
+        console.log(`\nPlayer: ${player}`);
+        console.log(`Games: ${games.join(", ")}`);
+        
+        const playerScoreArray = playerScores.get(player) || [];
+        if (playerScoreArray.length > 0) {
+            const totalScore = playerScoreArray.reduce((sum, score) => sum + score, 0);
+            const averageScore = totalScore / playerScoreArray.length;
+            console.log(`Scores: ${playerScoreArray.join(", ")}`);
+            console.log(`Total Score: ${totalScore}`);
+            console.log(`Average Score: ${averageScore.toFixed(2)}`);
+        } else {
+            console.log("No scores recorded");
+        }
     });
 }
 
-  
+// Initialize and display current data
+console.log("Initial player data:");
+displaySummary();
 
-  
+// Example of adding a random game to each player
+playerList.forEach(player => {
+    const newGame = randomGame();
+    storeGame(player, newGame);
+});
 
+// Update results object for any additional processing
+let results = {};
+nameMap.forEach((games, player) => {
+    results[player] = {
+        games: games,
+        scores: playerScores.get(player) || []
+    };
+});
 
-  
-
-
+console.log("Updated results object:", results);
